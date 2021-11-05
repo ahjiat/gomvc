@@ -30,7 +30,7 @@ func main() {
 		{"/matchtest/{n:.*}", "Index"},
 	}, new(controller.Motor))
 
-	web.AllowDomains([]string{"{subdomain}.grannygame.io", "thanks.com"})
+	web.AllowDomains("{subdomain}.grannygame.io", "thanks.com")
 	web.Route([]RC{ {"/singleinfo", "Info"}, }, new(controller.Info))
 	web.PathPrefix("/single").Route([]RC{
 		{Path:"/1", Action:"Info"},
