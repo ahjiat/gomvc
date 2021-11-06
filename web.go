@@ -1,5 +1,19 @@
 package main
 
+/*
+	Usage:
+		webRouter, httpRouter := Web.Router()
+			webRouter. {
+				Domains(domains...string)
+				AnyDomain()
+				Methods(methods...string)
+				PathPrefix(string)
+				SupportParameters(parameter)
+				Route([]Web.RouteConfig)
+				RouteByController([]string, BaseController)
+			}
+*/
+
 import (
 	"fmt"
 	"net/http"
@@ -18,7 +32,6 @@ func main() {
 	routeDomain01.Route([]RC{
 		{"/one/testinfo2", "Info2"},
 	}, new(controller.Info))
-
 
 	route02 := webRouter.SupportParameters(
 		new(parameter.Username),

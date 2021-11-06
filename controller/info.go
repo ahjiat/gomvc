@@ -13,7 +13,7 @@ func (self *Info) Info(arg struct {
 	POST_name     *parameter.Username
 	POST_password *parameter.Password
 }) {
-
+	self.Echo("view path: " + self.ViewBasePath + "\n")
 	if arg.GET_name != nil {
 		if arg.GET_name.Valid {
 			self.Echo("GET name => " + arg.GET_name.Value + "\n")
