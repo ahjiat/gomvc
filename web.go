@@ -13,24 +13,27 @@ type RC = Web.RouteConfig
 
 func main() {
 	webRouter, httpRouter := Web.Router()
-	root := webRouter.SupportParameters(
+
+	routeDomain01 := webRouter.Domains("test.grannygame.io")
+	routeDomain01.Route([]RC{
+		{"/one/testinfo2", "Info2"},
+	}, new(controller.Info))
+
+
+	route02 := webRouter.SupportParameters(
 		new(parameter.Username),
 		new(parameter.Password))
-
-	ipDomain := root.Domains("52.77.146.102")
-	ipDomain.Route([]RC{
+	route02.Route([]RC{
 		{"/testinfo", "Info"},
 		{"/testinfo2", "Info2"},
 	}, new(controller.Info))
-	ipDomain.Route([]RC{
+	route02.Route([]RC{
 		{"/testgetpost", "TestGetPost"},
 		{"/matchtest/{n:.*}", "Index"},
 	}, new(controller.Motor))
-
-	root.RouteByController("/allinone", new(controller.Motor))
-	root.RouteByController("/info/{path}", new(controller.Info))
-
-	root.Route(RC{"/{n:.*}", "PageNotFound"}, new(controller.Page))
+	route02.RouteByController("/allinone", new(controller.Motor))
+	route02.RouteByController("/info/{path}", new(controller.Info))
+	route02.Route(RC{"/{n:.*}", "PageNotFound"}, new(controller.Page))
 
 	server := &http.Server{
 		Addr:           "0.0.0.0:8080",
