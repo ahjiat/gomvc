@@ -27,6 +27,7 @@ type RC = Web.RouteConfig
 
 func main() {
 	webRouter, httpRouter := Web.Router()
+	webRouter = webRouter.SetViewDir("view").SetControllerDir("controller")
 
 	routeDomain01 := webRouter.Domains("test.grannygame.io")
 	routeDomain01.Route([]RC{
@@ -37,8 +38,8 @@ func main() {
 		new(parameter.Username),
 		new(parameter.Password))
 	route02.Route([]RC{
-		{"/testinfo", "Info"},
-		{"/testinfo2", "Info2"},
+		{Path:"/testinfo", Action:"Info"},
+		{Path:"/testinfo2", Action:"Info2"},
 	}, new(controller.Info))
 	route02.Route([]RC{
 		{"/testgetpost", "TestGetPost"},
