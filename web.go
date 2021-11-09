@@ -19,7 +19,7 @@ import (
 	"time"
 	"github.com/ahjiat/gomvc/controller"
 	"github.com/ahjiat/gomvc/parameter"
-	Web "github.com/ahjiat/gomvclib"
+	"github.com/ahjiat/gomvclib"
 )
 
 type RC = Web.RouteConfig
@@ -29,9 +29,7 @@ func main() {
 	webRouter = webRouter.SetViewDir("view").SetControllerDir("controller")
 
 	routeDomain01 := webRouter.Domains("test.grannygame.io")
-	routeDomain01.Route([]RC{
-		{"/one/testinfo2", "Info2"},
-	}, new(controller.Info))
+	routeDomain01.Route(RC{"/mytest", "Index"}, new(controller.Test))
 
 	route02 := webRouter.SupportParameters(
 		new(parameter.Username),
