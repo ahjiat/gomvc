@@ -5,7 +5,6 @@ package main
 		webRouter, httpRouter := Web.Router()
 			webRouter. {
 				Domains(domains...string)
-				AnyDomain()
 				Methods(methods...string)
 				PathPrefix(string)
 				SupportParameters(parameter)
@@ -55,6 +54,7 @@ func main() {
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
+		ErrorLog: nil,
 	}
 	fmt.Println("Http Server...")
 	server.ListenAndServe()
