@@ -7,7 +7,6 @@ import (
 
 type Test struct{ BaseController }
 func (self Test) Index() {
-	/*
 	js := struct {
 		Title string	`json:"title"`
 		Age int			`json:"age"`
@@ -23,7 +22,5 @@ func (self Test) Index() {
 		js,
 		html,
 	}
-	*/
-	self.ViewBag = "hello"
 	self.View()
 }
