@@ -7,5 +7,5 @@ import (
 type Page struct{ BaseController }
 
 func (self *Page) PageNotFound() {
-	self.Echo("Page Not Found, but status code still 200")	
+	self.Base.Echo("Page Not Found, but status code still 200")	
 }

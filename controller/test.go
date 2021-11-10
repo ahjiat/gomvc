@@ -6,7 +6,7 @@ import (
 )
 
 type Test struct{ BaseController }
-func (self Test) Index() {
+func (self *Test) Index() {
 	js := struct {
 		Title string	`json:"title"`
 		Age int			`json:"age"`
@@ -15,12 +15,12 @@ func (self Test) Index() {
 		Name string		`json:"name"`
 		Num	int			`json:"num"`
 	} { "power", 20 }
-	self.ViewBag = struct {
+	self.Base.ViewBag = struct {
 		Js interface{}
 		Html interface{}
 	} {
 		js,
 		html,
 	}
-	self.View()
+	self.Base.View()
 }

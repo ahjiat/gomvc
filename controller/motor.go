@@ -13,7 +13,7 @@ type Motor struct {
 }
 
 func (u *Motor) Index() {
-	u.Echo(`
+	u.Base.Echo(`
 	<html>
 	<body>
 		<div style="color:red">welcome</div>
@@ -26,8 +26,8 @@ func (u *Motor) Testing1(args struct {
 	GET_name, GET_who   string
 	POST_name, POST_who int
 }) {
-	u.Echo(args.GET_name)
-	u.Echo(args.GET_who)
+	u.Base.Echo(args.GET_name)
+	u.Base.Echo(args.GET_who)
 }
 
 func (u *Motor) TestGetPost(args struct {
@@ -35,17 +35,17 @@ func (u *Motor) TestGetPost(args struct {
 	GET_who  string
 	POST_id  int
 }) {
-	u.Echo(args.GET_name)
-	u.Echo(args.GET_who)
-	u.Echo(strconv.Itoa(args.POST_id))
+	u.Base.Echo(args.GET_name)
+	u.Base.Echo(args.GET_who)
+	u.Base.Echo(strconv.Itoa(args.POST_id))
 }
 
 func (u *Motor) TestPost(args struct {
 	POST_name string
 	POST_who  string
 }) {
-	u.Echo(args.POST_name)
-	u.Echo(args.POST_who)
+	u.Base.Echo(args.POST_name)
+	u.Base.Echo(args.POST_who)
 }
 func (u *Motor) Process(args struct {
 	GET_id   int
@@ -54,7 +54,7 @@ func (u *Motor) Process(args struct {
 }) {
 	fmt.Println("========= Process =============")
 	u.count++
-	u.Echo("starting\n")
+	u.Base.Echo("starting\n")
 	fmt.Println("get:", args.GET_id, " get:", args.GET_id2, " get:", args.GET_name, " count:", u.count)
 	//msg := "count:" + string(u.count) + "\n";
 	//for i := 0; i < 5; i++ {
