@@ -7,5 +7,5 @@ import (
 type Login struct{ BaseController }
 func (self *Login) Check() {
 	self.Base.Echo("from middleware\n")
-	self.Base.Next("welcome", "20")
+	self.Base.RouteNext("welcome", "20")
 }
