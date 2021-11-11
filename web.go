@@ -8,6 +8,7 @@ package main
 				Methods(methods...string)
 				PathPrefix(string)
 				SupportParameters(parameter)
+				RouteChain([]Web.RouteChainConfig)
 				Route([]Web.RouteConfig)
 				RouteByController([]string, BaseController)
 			}
@@ -23,17 +24,21 @@ import (
 )
 
 type RC = Web.RouteConfig
+type RCC = Web.RouteChainConfig
 
 func main() {
 	webRouter, httpRouter := Web.Router()
 	webRouter = webRouter.SetViewDir("view").SetControllerDir("controller")
+	webRouter = webRouter.SupportParameters(new(parameter.Username), new(parameter.Password))
 
 	routeDomain01 := webRouter.Domains("test.grannygame.io")
+	{
+		c := routeDomain01.RouteChain(RCC{"Check", new(controller.Login)})
+		c.Route(RC{"/super", "Index"}, new(controller.Test))
+	}
 	routeDomain01.Route(RC{"/mytest", "Index"}, new(controller.Test))
 
-	route02 := webRouter.SupportParameters(
-		new(parameter.Username),
-		new(parameter.Password))
+	route02 := webRouter
 	route02.Route([]RC{
 		{Path:"/testinfo", Action:"Info"},
 		{Path:"/testinfo2", Action:"Info2"},

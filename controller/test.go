@@ -3,10 +3,14 @@ import (
 	. "github.com/ahjiat/gomvclib/basecontroller"
 	_"encoding/json"
 	_"html/template"
+	"github.com/ahjiat/gomvc/parameter"
 )
 
+
 type Test struct{ BaseController }
-func (self *Test) Index() {
+func (self *Test) Index(arg struct {
+	GET_name    parameter.Username
+}) {
 	js := struct {
 		Title string	`json:"title"`
 		Age int			`json:"age"`
@@ -22,5 +26,9 @@ func (self *Test) Index() {
 		js,
 		html,
 	}
+	if len(self.Base.InChainArgs) > 0 {
+		self.Base.Echo(self.Base.InChainArgs[0].(string))
+	}
+	self.Base.Echo(arg.GET_name.Value)
 	self.Base.View()
 }
