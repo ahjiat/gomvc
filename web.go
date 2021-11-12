@@ -8,7 +8,7 @@ package main
 				Methods(methods...string)
 				PathPrefix(string)
 				SupportParameters(parameter)
-				RouteChain([]Web.RouteChainConfig)
+				RouteChain([]string|string, BaseController)
 				Route([]Web.RouteConfig)
 				RouteByController([]string, BaseController)
 			}
@@ -24,33 +24,36 @@ import (
 )
 
 type C = Web.RouteConfig
-type RC = Web.RouteChainConfig
+
+func domainRoute(route *Web.Route) {
+	route = route.Domains("test.grannygame.io")
+	{
+		c := route.RouteChain("Check", new(controller.Login))
+		c.Route(C{"/super", "Index"}, new(controller.Test))
+	}
+	route.Route(C{"/mytest", "Index"}, new(controller.Test))
+}
+
+func defaultRoute(route *Web.Route) {
+	route.Route([]C{
+		{Path:"/testinfo", Action:"Info"},
+		{Path:"/testinfo2", Action:"Info2"},
+	}, new(controller.Info))
+	route.Route([]C{
+		{"/testgetpost", "TestGetPost"},
+		{"/matchtest/{n:.*}", "Index"},
+	}, new(controller.Motor))
+	route.RouteByController("/allinone", new(controller.Motor))
+	route.RouteByController("/info/{path}", new(controller.Info))
+	route.Route(C{"/{n:.*}", "PageNotFound"}, new(controller.Page))
+}
 
 func main() {
 	webRouter, httpRouter := Web.Router()
 	webRouter = webRouter.SetViewDir("view").SetControllerDir("controller")
 	webRouter = webRouter.SupportParameters(new(parameter.Username), new(parameter.Password))
-
-	domain1 := webRouter.Domains("test.grannygame.io")
-	{
-		c := domain1.RouteChain(RC{"Check", new(controller.Login)})
-		c.Route(C{"/super", "Index"}, new(controller.Test))
-	}
-	domain1.Route(C{"/mytest", "Index"}, new(controller.Test))
-
-	route02 := webRouter
-	route02.Route([]C{
-		{Path:"/testinfo", Action:"Info"},
-		{Path:"/testinfo2", Action:"Info2"},
-	}, new(controller.Info))
-	route02.Route([]C{
-		{"/testgetpost", "TestGetPost"},
-		{"/matchtest/{n:.*}", "Index"},
-	}, new(controller.Motor))
-	route02.RouteByController("/allinone", new(controller.Motor))
-	route02.RouteByController("/info/{path}", new(controller.Info))
-	route02.Route(C{"/{n:.*}", "PageNotFound"}, new(controller.Page))
-
+	domainRoute(webRouter)
+	defaultRoute(webRouter)
 	server := &http.Server{
 		Addr:           "0.0.0.0:8080",
 		Handler:        httpRouter,
