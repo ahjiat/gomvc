@@ -26,12 +26,11 @@ import (
 type C = Web.RouteConfig
 
 func domainRoute(route *Web.Route) {
-	route = route.Domains("test.grannygame.io")
-	{
-		c := route.RouteChain("Check", new(controller.Login))
-		c.Route(C{"/super", "Index"}, new(controller.Test))
-	}
-	route.Route(C{"/mytest", "Index"}, new(controller.Test))
+	route.Route(C{"/super", "Index"}, new(controller.Test))
+}
+
+func loginRoute(route *Web.Route) {
+	route.Route(C{"/login/{n:.*}", "Index"}, new(controller.Test))
 }
 
 func defaultRoute(route *Web.Route) {
@@ -52,8 +51,11 @@ func main() {
 	webRouter, httpRouter := Web.Router()
 	webRouter = webRouter.SetViewDir("view").SetControllerDir("controller")
 	webRouter = webRouter.SupportParameters(new(parameter.Username), new(parameter.Password))
-	domainRoute(webRouter)
+
+	domainRoute(webRouter.Domains("test.grannygame.io"))
+	loginRoute(webRouter.RouteChain("Check", new(controller.Login)))
 	defaultRoute(webRouter)
+
 	server := &http.Server{
 		Addr:           "0.0.0.0:8080",
 		Handler:        httpRouter,
