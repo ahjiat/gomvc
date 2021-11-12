@@ -23,33 +23,33 @@ import (
 	"github.com/ahjiat/gomvclib"
 )
 
-type RC = Web.RouteConfig
-type RCC = Web.RouteChainConfig
+type C = Web.RouteConfig
+type RC = Web.RouteChainConfig
 
 func main() {
 	webRouter, httpRouter := Web.Router()
 	webRouter = webRouter.SetViewDir("view").SetControllerDir("controller")
 	webRouter = webRouter.SupportParameters(new(parameter.Username), new(parameter.Password))
 
-	routeDomain01 := webRouter.Domains("test.grannygame.io")
+	domain1 := webRouter.Domains("test.grannygame.io")
 	{
-		c := routeDomain01.RouteChain(RCC{"Check", new(controller.Login)})
-		c.Route(RC{"/super", "Index"}, new(controller.Test))
+		c := domain1.RouteChain(RC{"Check", new(controller.Login)})
+		c.Route(C{"/super", "Index"}, new(controller.Test))
 	}
-	routeDomain01.Route(RC{"/mytest", "Index"}, new(controller.Test))
+	domain1.Route(C{"/mytest", "Index"}, new(controller.Test))
 
 	route02 := webRouter
-	route02.Route([]RC{
+	route02.Route([]C{
 		{Path:"/testinfo", Action:"Info"},
 		{Path:"/testinfo2", Action:"Info2"},
 	}, new(controller.Info))
-	route02.Route([]RC{
+	route02.Route([]C{
 		{"/testgetpost", "TestGetPost"},
 		{"/matchtest/{n:.*}", "Index"},
 	}, new(controller.Motor))
 	route02.RouteByController("/allinone", new(controller.Motor))
 	route02.RouteByController("/info/{path}", new(controller.Info))
-	route02.Route(RC{"/{n:.*}", "PageNotFound"}, new(controller.Page))
+	route02.Route(C{"/{n:.*}", "PageNotFound"}, new(controller.Page))
 
 	server := &http.Server{
 		Addr:           "0.0.0.0:8080",

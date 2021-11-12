@@ -26,8 +26,8 @@ func (self *Test) Index(arg struct {
 		js,
 		html,
 	}
-	if len(self.Base.InChainArgs) > 0 {
-		self.Base.Echo(self.Base.InChainArgs[0].(string))
+	if len(self.Base.ChainArgs) > 0 {
+		self.Base.Echo(self.Base.ChainArgs[0].(string))
 	}
 	self.Base.Echo(arg.GET_name.Value)
 	self.Base.View()
