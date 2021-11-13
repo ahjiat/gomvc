@@ -21,6 +21,10 @@ import (
 	"github.com/ahjiat/gomvc/controller"
 	"github.com/ahjiat/gomvc/parameter"
 	"github.com/ahjiat/gomvclib"
+	"net"
+	"syscall"
+	"golang.org/x/sys/unix"
+	"context"
 )
 
 type C = Web.RouteConfig
@@ -57,8 +61,25 @@ func main() {
 	loginRoute(webRouter.RouteChain("Check", new(controller.Login)).RouteChain("Check2", new(controller.Login)))
 	defaultRoute(webRouter)
 
+	lc := net.ListenConfig{
+        Control: func(network, address string, conn syscall.RawConn) error {
+            var operr error
+            if err := conn.Control(func(fd uintptr) {
+                operr = syscall.SetsockoptInt(int(fd), unix.SOL_SOCKET, unix.SO_REUSEPORT, 1)
+            }); err != nil {
+                return err
+            }
+            return operr
+        },
+    }
+
+    ln, err := lc.Listen(context.Background(), "tcp", "0.0.0.0:8080")
+    if err != nil {
+        panic(err)
+    }
+
 	server := &http.Server{
-		Addr:           "0.0.0.0:8080",
+		//Addr:           "0.0.0.0:8081",
 		Handler:        httpRouter,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
@@ -66,5 +87,6 @@ func main() {
 		ErrorLog: nil,
 	}
 	fmt.Println("Http Server...")
-	server.ListenAndServe()
+	//server.ListenAndServe(ln, nil)
+	server.Serve(ln)
 }
