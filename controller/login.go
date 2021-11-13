@@ -8,8 +8,16 @@ func (self *Login) Check(args struct {
 }) {
 	header := self.Base.ParseTemplate("Navigator", `Top {{.}}`)
 	footer := self.Base.ParseTemplate("Footor", `Bottom {{.}}`)
-	v := self.Base.SetMasterView()
-	v.AddTemplate("header", header)
-	v.AddTemplate("footer", footer)
-	self.Base.RouteNext("welcome", "20")
+	v := self.Base.CreateMasterView()
+	v.DefineTemplate("header", header)
+	v.DefineTemplate("footer", footer)
+	self.Base.RouteNext("welcome1", "20")
 }
+
+func (self *Login) Check2() {
+	footer := self.Base.ParseTemplate("Footor2", `Bottom {{.}}`)
+	v := self.Base.GetMasterView()
+	v.DefineTemplate("footer", footer)
+	self.Base.RouteNext("welcome2", "22")
+}
+

@@ -1,0 +1,7 @@
+TODO
+=====
+- self.Base.CreateMasterViewByString(string)
+- self.Base.CreateMasterView(files...)
+- v.DefineTemplateView(files....)
+- v.DefineTemplateViewByString(string)
+- requires optimization on cache
