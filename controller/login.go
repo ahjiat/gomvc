@@ -5,11 +5,11 @@ import (
 
 type Login struct{ BaseController }
 func (self *Login) Check(args struct {
-	GET_name int
 }) {
-	if args.GET_name == 20 {
-		self.Base.Echo("name not found\n")
-	} else {
-		self.Base.RouteNext("welcome", "20")
-	}
+	header := self.Base.ParseTemplate("Navigator", `Top {{.}}`)
+	footer := self.Base.ParseTemplate("Footor", `Bottom {{.}}`)
+	v := self.Base.SetMasterView()
+	v.AddTemplate("header", header)
+	v.AddTemplate("footer", footer)
+	self.Base.RouteNext("welcome", "20")
 }

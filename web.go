@@ -27,6 +27,7 @@ type C = Web.RouteConfig
 
 func domainRoute(route *Web.Route) {
 	route.Route(C{"/super", "Index"}, new(controller.Test))
+	route.Route(C{"/template", "Index"}, new(controller.Template))
 }
 
 func loginRoute(route *Web.Route) {

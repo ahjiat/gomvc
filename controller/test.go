@@ -19,6 +19,7 @@ func (self *Test) Index(arg struct {
 		Name string		`json:"name"`
 		Num	int			`json:"num"`
 	} { "power", 20 }
+
 	self.Base.ViewBag = struct {
 		Js interface{}
 		Html interface{}
@@ -26,9 +27,9 @@ func (self *Test) Index(arg struct {
 		js,
 		html,
 	}
-	if len(self.Base.ChainArgs) > 0 {
-		self.Base.Echo(self.Base.ChainArgs[0].(string))
-	}
-	self.Base.Echo(arg.GET_name.Value)
+	//if len(self.Base.ChainArgs) > 0 {
+	//	self.Base.Echo(self.Base.ChainArgs[0].(string))
+	//}
+	//self.Base.Echo(arg.GET_name.Value)
 	self.Base.View()
 }
