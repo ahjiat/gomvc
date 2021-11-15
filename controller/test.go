@@ -2,7 +2,7 @@ package controller
 import (
 	. "github.com/ahjiat/gomvclib/basecontroller"
 	_"encoding/json"
-	_"html/template"
+	_"text/template"
 	"github.com/ahjiat/gomvc/parameter"
 )
 
@@ -27,9 +27,16 @@ func (self *Test) Index(arg struct {
 		js,
 		html,
 	}
+
 	//if len(self.Base.ChainArgs) > 0 {
 	//	self.Base.Echo(self.Base.ChainArgs[0].(string))
 	//}
 	//self.Base.Echo(arg.GET_name.Value)
+
+	self.masterView(self.Base.ViewBag)
 	self.Base.View()
 }
+func (self *Test) masterView(data interface{}, fileName ...string) {
+	self.Base.MasterView("body", data, fileName...)
+}
+

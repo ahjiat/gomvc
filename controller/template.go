@@ -2,7 +2,7 @@ package controller
 import (
 	. "github.com/ahjiat/gomvclib/basecontroller"
 	_"encoding/json"
-	_"html/template"
+	_"text/template"
 	_"github.com/ahjiat/gomvc/parameter"
 )
 
