@@ -58,7 +58,7 @@ func main() {
 	webRouter = webRouter.SupportParameters(new(parameter.Username), new(parameter.Password))
 
 	domainRoute(webRouter.Domains("test.grannygame.io"))
-	loginRoute(webRouter.RouteChain("Check", new(controller.Login)).RouteChain("Check2", new(controller.Login)))
+	loginRoute(webRouter.Use("Check", new(controller.Login)).Use("Check2", new(controller.Login)))
 	defaultRoute(webRouter)
 
 	lc := net.ListenConfig{
