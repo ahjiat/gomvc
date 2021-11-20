@@ -15,16 +15,18 @@ package main
 */
 
 import (
+	"context"
 	"fmt"
+	"net"
 	"net/http"
+	"syscall"
 	"time"
+
 	"github.com/ahjiat/gomvc/controller"
 	"github.com/ahjiat/gomvc/parameter"
 	"github.com/ahjiat/gomvclib"
-	"net"
-	"syscall"
+	"github.com/gorilla/mux"
 	"golang.org/x/sys/unix"
-	"context"
 )
 
 type C = Web.RouteConfig
@@ -61,6 +63,24 @@ func main() {
 	loginRoute(webRouter.Use("Check", new(controller.Login)).Use("Check2", new(controller.Login)))
 	defaultRoute(webRouter)
 
+	normal_webserver(httpRouter)
+	//reuseport_webserver(httpRouter)
+}
+
+func normal_webserver(r *mux.Router) {
+	server := &http.Server{
+		Addr:           "0.0.0.0:8080",
+		Handler:        r,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+		ErrorLog: nil,
+	}
+	fmt.Println("normal_webserver...")
+	err := server.ListenAndServe(); if err != nil { panic(err) }
+}
+
+func reuseport_webserver(r *mux.Router) {
 	lc := net.ListenConfig{
         Control: func(network, address string, conn syscall.RawConn) error {
             var operr error
@@ -79,14 +99,13 @@ func main() {
     }
 
 	server := &http.Server{
-		//Addr:           "0.0.0.0:8081",
-		Handler:        httpRouter,
+		Handler:        r,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 		ErrorLog: nil,
 	}
-	fmt.Println("Http Server...")
-	//server.ListenAndServe(ln, nil)
-	server.Serve(ln)
+
+	fmt.Println("reuseport_webserver...")
+	err = server.Serve(ln); if err != nil { panic(err) }
 }
