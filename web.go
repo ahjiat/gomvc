@@ -27,7 +27,6 @@ import (
 	"github.com/ahjiat/gomvc/controller"
 	"github.com/ahjiat/gomvc/parameter"
 	"github.com/ahjiat/gomvclib"
-	"github.com/ahjiat/gomvclib/database"
 	"github.com/gorilla/mux"
 	"golang.org/x/sys/unix"
 )
@@ -64,7 +63,6 @@ func main() {
 	defer logFile.Close()
 	log.SetOutput(logFile)
 
-	Database.AddDBConnection("db", `root:server*@tcp(127.0.0.1:3306)/VideoTV?&charset=utf8mb4&collation=utf8mb4_unicode_ci`)
 	webRouter, httpRouter := Web.Router()
 	webRouter = webRouter.SetViewDir("view").SetControllerDir("controller")
 	webRouter = webRouter.SupportParameters(new(parameter.Username), new(parameter.Password))
