@@ -21,10 +21,13 @@ import (
 	"net/http"
 	"syscall"
 	"time"
+	"log"
+	"os"
 
 	"github.com/ahjiat/gomvc/controller"
 	"github.com/ahjiat/gomvc/parameter"
 	"github.com/ahjiat/gomvclib"
+	"github.com/ahjiat/gomvclib/database"
 	"github.com/gorilla/mux"
 	"golang.org/x/sys/unix"
 )
@@ -33,7 +36,6 @@ type C = Web.RouteConfig
 
 func domainRoute(route *Web.Route) {
 	route.Route(C{"/super", "Index"}, new(controller.Test))
-	route.Route(C{"/template", "Index"}, new(controller.Template))
 }
 
 func loginRoute(route *Web.Route) {
@@ -41,6 +43,8 @@ func loginRoute(route *Web.Route) {
 }
 
 func defaultRoute(route *Web.Route) {
+	route.Route(C{"/template", "Index"}, new(controller.Template))
+	route.Route(C{"/api/process", "SetAry"}, new(controller.Template))
 	route.Route([]C{
 		{Path:"/testinfo", Action:"Info"},
 		{Path:"/testinfo2", Action:"Info2"},
@@ -55,6 +59,12 @@ func defaultRoute(route *Web.Route) {
 }
 
 func main() {
+	// enable log
+	logFile, err := os.OpenFile("server.log", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666); if err != nil { panic(err) }
+	defer logFile.Close()
+	log.SetOutput(logFile)
+
+	Database.AddDBConnection("db", `root:server*@tcp(127.0.0.1:3306)/VideoTV?&charset=utf8mb4&collation=utf8mb4_unicode_ci`)
 	webRouter, httpRouter := Web.Router()
 	webRouter = webRouter.SetViewDir("view").SetControllerDir("controller")
 	webRouter = webRouter.SupportParameters(new(parameter.Username), new(parameter.Password))
@@ -63,6 +73,7 @@ func main() {
 	loginRoute(webRouter.Use("Check", new(controller.Login)).Use("Check2", new(controller.Login)))
 	defaultRoute(webRouter)
 
+	httpRouter.Use(RequestLogger)
 	normal_webserver(httpRouter)
 	//reuseport_webserver(httpRouter)
 }
@@ -109,3 +120,19 @@ func reuseport_webserver(r *mux.Router) {
 	fmt.Println("reuseport_webserver...")
 	err = server.Serve(ln); if err != nil { panic(err) }
 }
+
+func RequestLogger(targetMux http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		targetMux.ServeHTTP(w, r)
+		requesterIP := r.RemoteAddr
+		log.Printf(
+			 "%s\t\t%s\t\t%s\t\t%v",
+			 r.Method,
+			 r.RequestURI,
+			 requesterIP,
+			 time.Since(start),
+		)
+	})
+ }
+
