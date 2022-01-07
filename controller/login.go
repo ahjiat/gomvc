@@ -9,12 +9,12 @@ func (self *Login) Check(args struct {
 }) {
 	headerDat := "happyday"; _ = headerDat
 	if args.GET_name == "check" {
-		v := self.Base.CreateMasterView(); _ = v
+		v := self.Base.CreateMasterTemplate(); _ = v
 		v.DefineTemplate("header", headerDat, "Header.html")
 	} else if args.GET_name == "check1" {
-		self.Base.CreateMasterView("Check1.html")
+		self.Base.CreateMasterTemplate("Check1.html")
 	} else {
-		self.Base.RemoveMasterView()
+		self.Base.RemoveMasterTemplate()
 	}
 
 	self.Base.RouteNext("welcome1", "20")
