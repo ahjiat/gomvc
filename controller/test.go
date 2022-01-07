@@ -37,6 +37,7 @@ func (self *Test) Index(arg struct {
 	self.Base.View()
 }
 func (self *Test) masterView(data interface{}, fileName ...string) {
-	self.Base.MasterView("body", data, fileName...)
+	self.Base.MasterViewBag = data
+	self.Base.MasterView("body", fileName...)
 }
 
