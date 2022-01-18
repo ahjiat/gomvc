@@ -33,11 +33,7 @@ func (self *Test) Index(arg struct {
 	//}
 	//self.Base.Echo(arg.GET_name.Value)
 
-	self.masterView(self.Base.ViewBag)
+	self.Base.MasterViewBag = self.Base.ViewBag
+	self.Base.MasterView()
 	self.Base.View()
 }
-func (self *Test) masterView(data interface{}, fileName ...string) {
-	self.Base.MasterViewBag = data
-	self.Base.MasterView(fileName...)
-}
-

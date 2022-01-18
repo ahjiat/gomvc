@@ -64,7 +64,7 @@ func main() {
 	log.SetOutput(logFile)
 
 	webRouter, httpRouter := Web.Router()
-	webRouter = webRouter.SetViewDir("view").SetControllerDir("controller")
+	webRouter = webRouter.SetViewDir("view")
 	webRouter = webRouter.SupportParameters(new(parameter.Username), new(parameter.Password))
 
 	domainRoute(webRouter.Domains("test.grannygame.io"))
